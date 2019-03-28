@@ -4,7 +4,7 @@ import urllib
 
 def main():
 
-	html = urllib.urlopen("https://bandcamp.com/login").read().decode('utf-8')
+	html = urllib.urlopen("someURL").read().decode('utf-8')
 	print(html)
 
 if __name__ == "__main__":
