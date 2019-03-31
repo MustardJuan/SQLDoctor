@@ -10,17 +10,17 @@ def POST_generator():
     r = requests.get(URL)
     html_bytes = r.text
 
-	#bsoup allows for ease of html parsing and provides general formatting
+   #bsoup allows for ease of html parsing and provides general formatting
     soup =  BeautifulSoup(html_bytes, 'lxml')
     token = soup.find_all('input')
 
-	#regex that is used to search for name fields in html
+    #regex that is used to search for name fields in html
     pattern = "((name=)([\"])\w*([\"]))"
     list_input_names = []
 	form_inputs = []
 
-	#actual html tag and field search done via the re.findall call
-	#those found are sent to - list_input_names
+    #actual html tag and field search done via the re.findall call
+    #those found are sent to - list_input_names
     for i in token:
         try:
             found = re.findall(pattern, str(i))
@@ -29,7 +29,7 @@ def POST_generator():
             print("no name found")
     
     for i in list_input_names:
-		#re.findall call looks for all name tags that satisfy the regex constraint
+	#re.findall call looks for all name tags that satisfy the regex constraint
         form_inputs.append(re.findall(r'"(.*?)"',i)[0])
 
     print(form_inputs)
