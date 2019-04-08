@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+from Display import *
 
 #searches html page for any potential forms 
 #generates and executes POST requests to the victim webserver
@@ -17,7 +18,7 @@ def POST_generator():
     #regex that is used to search for name fields in html
     pattern = "((name=)([\"])\w*([\"]))"
     list_input_names = []
-	form_inputs = []
+    form_inputs = []
 
     #actual html tag and field search done via the re.findall call
     #those found are sent to - list_input_names
@@ -46,4 +47,5 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
 
 if __name__ == "__main__" :
 
-    field_grabber()
+    display_welcome()	
+    POST_generator()
