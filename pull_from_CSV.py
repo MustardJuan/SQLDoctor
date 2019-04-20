@@ -11,7 +11,7 @@ def pull_from_CSV():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
-            dictionary[row[0]] = row[2]
+            dictionary[row[0]] = row[1]
 
             # dbNameList.append(row[0])
             # fingerprintList.append(row[1])
