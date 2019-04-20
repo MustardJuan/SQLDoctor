@@ -8,7 +8,7 @@ from pull_from_CSV import *
 #generates and executes POST requests to the victim webserver
 def POST_generator():
 
-    URL = "https://redtiger.labs.overthewire.org/level1.php"
+    URL = "http://wargame.kr:8080/login_filtering/"
     r = requests.get(URL)
     html_bytes = r.text
 
