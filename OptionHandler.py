@@ -2,24 +2,16 @@
 #Just a rough high-level outline
 
 from Display import *
+import argparse
 
+def option_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", help="Display fingerprint of database",action="store_true")
+    parser.add_argument("--fuzz", help="Do fuzzing",action="store_true")
+    parser.add_argument("-a", help="Display attack",action="store_true")
+    parser.add_argument("-x", help="Display unique attack",action="store_true")
+    parser.add_argument("TargetURL", help="Target URL", type=str)
+    
+    args = parser.parse_args()
 
-def option_parser(arguments):
-
-    #splits command line input looking for flags by checking for tack
-    for x in arguments:
-        if x[0] == '-':
-            flags = x.split("-")
-            option_lookup(flags)
-
-def option_lookup(flag):
-
-    #dictionary mapping base output to identified flag
-    flag_output = {'h' : display_help(),
-                   'f' : display_fingerprint(),
-                   'a' : display_attack(),
-                   'x' : display_uniq_attack()}
-
-    #something wrong with my logic here but checks to see if flag is valid and outputs accordingly
-    if flag in flag_output:
-        flag_output[flag]()
+    return args

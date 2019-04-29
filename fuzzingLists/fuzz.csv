@@ -1,0 +1,4 @@
+Database,Escape,Select,All,From,All,Where,1=1,Comment
+MySQL,',Select,*,From,*,Where,1=1,--
+Oracle,',SELECT,*,FROM,*,WHERE,1=1,--
+MongoDB,,,,,,,,
