@@ -36,7 +36,6 @@ def pull_from_generator():
             fuzzingList.append(hold.strip())
             line_count += 1    
 
-        #return fuzzingDict
         return fuzzingList, dbList
 
 def fuzz():
@@ -60,14 +59,12 @@ def fuzz():
         firstpart, secondpart = itemList[:len(itemList)//2], itemList[len(itemList)//2:]
         fuzzingDict[dbName + " payload:" + str(1)] = firstpart
         fuzzingDict[dbName + " payload:" + str(1)] = secondpart
-        # print(firstpart)
-        # print(secondpart)
 
         payloadCount = 2
         flag = 1 #Denotes which half to choose to go forward with
         while(len(firstpart) > 1 or len(secondpart) > 1):
             if(flag):
-                firstpart, secondpart = firstpart[:len(firstpart)//2], firstpart[len(secondpart)//2:] #split first half
+                firstpart ,secondpart = firstpart[:len(firstpart)//2], firstpart[len(secondpart)//2:] #split first half
                 fuzzingDict[dbName + " payload:" + str(payloadCount)] = firstpart
                 payloadCount += 1
                 fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpart
@@ -78,9 +75,6 @@ def fuzz():
                 payloadCount += 1
                 fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpart
                 payloadCount += 1
-            # print(firstpart)
-            # print(secondpart)
-            # print()
     
     for key,value in fuzzingDict.items():
         hold = ""
