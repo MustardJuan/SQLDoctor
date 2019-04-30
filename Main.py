@@ -10,7 +10,7 @@ def main():
     #Grabs the options entered by the user
     args = option_parser()
     
-    POST_generator(args.TargetURL, args.fuzz)
+    POST_generator(args.TargetURL, args.f)
  
 if __name__ == "__main__":
 
