@@ -61,4 +61,3 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     file = open("hi.txt", "a")
     file.write("Hello this is the payload: " + username_input + "\n\n" + r.text + "\n\n")
     print(r.status_code)
-

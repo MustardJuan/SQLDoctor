@@ -4,13 +4,17 @@ import sys
 from Display import *
 from OptionHandler import *
 from POST_handler import *
+from url_parser import *
 
 def main():
 
     #Grabs the options entered by the user
     args = option_parser()
     
-    POST_generator(args.TargetURL, args.f)
+    if(args.u):
+        print(parse_url(args.TargetURL, ["TestUser", "TestPass"]))
+    else:
+        POST_generator(args.TargetURL, args.f)
  
 if __name__ == "__main__":
 
