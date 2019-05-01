@@ -1,2 +1,2 @@
-# SQLsUCK
+# SQLDoctor
 Automated SQL Injection Tool 
