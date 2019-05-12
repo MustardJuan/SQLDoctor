@@ -1,4 +1,4 @@
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, quote
 from pull_from_CSV import *
 import requests
 
@@ -39,9 +39,9 @@ def parse_url(url):
             count += 1
 
         # Make the new URL with the scheme(e.g. http) and the netloc (e.g. google.com) and the path (e.g. /search.php) add ? then the parameters and new query
-        new_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path + "?" + parsed_url.params + new_query
-        
+        new_url = parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path + "?" + parsed_url.params + quote(new_query)
 
+        #print(quote(new_query))
 
         # Post the new URL
         post_using_url(new_url, new_query)
