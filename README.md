@@ -33,6 +33,7 @@ SQLDoctor is a framework for the testing of SQL and NoSQL Injection. It supports
 ---
 
 ## Usage
+All URLs passed to SQLDoctor as arguments should be encased in quotation marks for reliable functionality.
 
 ### **Brute Forcing**
 Running SQLDoctor without the `-f` flag will use the Brute Force payloads with no fuzzing. This execution mode supports two types of parsing:
@@ -42,17 +43,17 @@ Running SQLDoctor without the `-f` flag will use the Brute Force payloads with n
 
  **HTML Parsing** does not need a flag. Just supply SQLDoctor with a URL to use as its target.
 
-        ./main.py [Target URL]
+        ./Main.py [Target URL]
 
  **URL Parsing** allows SQLDoctor to parse the url for any injectable fields. For the cases where HTML parsing is not relevant you can supply the URL parsing flag `-u` to change the parsing method to this type:
 
-    ./main.py -u [Target URL]
+    ./Main.py -u [Target URL]
 
 ### **Fuzzing**
 
 Running SQLDoctor with the `-f` flag utilizes the payload fuzzer. To run this type:
     
-    ./main.py -f [Target URL]
+    ./Main.py -f [Target URL]
 
 For more _help_ with running enter -h or -help for usage examples and flags/options available
 
