@@ -40,7 +40,7 @@ Running SQLDoctor without the `-f` flag will use the Brute Force payloads with n
 1. HTML Parsing
 2. URL Parsing 
 
- **HTML Parsing** does not need a flag. Just supply SQLDoctor with a URL to use as it's target.
+ **HTML Parsing** does not need a flag. Just supply SQLDoctor with a URL to use as its target.
 
         ./main.py [Target URL]
 
