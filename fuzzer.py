@@ -1,5 +1,4 @@
 import csv
-# POST_handler import *
 
 def pull_from_generator():
 
@@ -9,17 +8,15 @@ def pull_from_generator():
     fuzzingDict = {}
     dbList = []
 
+    # Open Fuzzing Payloads and add them to a fuzzinglist and fuzzing Dictionary 
     with open('fuzzingLists/fuzz.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
         for row in csv_reader:
             hold = ""
-            if(line_count == 0):
-                line_count += 1
-                continue
 
             item_count = 0
             dbName = ""
+            # add each item of every row to a dict and a list
             for item in row:
                 if (item_count == 0):
                     dbName = item
@@ -31,10 +28,9 @@ def pull_from_generator():
                 
                 hold = hold + " " + item
             
+            #strips away white space
             fuzzingDict[dbName] = hold.strip()
-
             fuzzingList.append(hold.strip())
-            line_count += 1    
 
         return fuzzingList, dbList
 
@@ -51,31 +47,53 @@ def fuzz():
         dbName = dbList[count]
         count += 1
 
+        #itemList is the complete CSV content that is split by spaces
         itemList = item.split()
+        
+        #we take the number of indexes
         countItemList = len(itemList)   
 
+        #In the dictionary the key is the database name + payload then a number that is incrementing and the value is the whole row
         fuzzingDict[dbName + " payload:" + str(0)] = itemList
 
-        firstpart, secondpart = itemList[:len(itemList)//2], itemList[len(itemList)//2:]
-        fuzzingDict[dbName + " payload:" + str(1)] = firstpart
-        fuzzingDict[dbName + " payload:" + str(1)] = secondpart
+        #First spliting of the SQL statements
+        firstpartfirst, secondpartfirst = itemList[:len(itemList)//2], itemList[len(itemList)//2:]
+        
+        fuzzingDict[dbName + " payload:" + str(1)] = firstpartfirst 
+        fuzzingDict[dbName + " payload:" + str(2)] = secondpartfirst
 
-        payloadCount = 2
-        flag = 1 #Denotes which half to choose to go forward with
-        while(len(firstpart) > 1 or len(secondpart) > 1):
-            if(flag):
-                firstpart ,secondpart = firstpart[:len(firstpart)//2], firstpart[len(secondpart)//2:] #split first half
-                fuzzingDict[dbName + " payload:" + str(payloadCount)] = firstpart
-                payloadCount += 1
-                fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpart
-                payloadCount += 1
-            else:
-                firstpart, secondpart = secondpart[:len(firstpart)//2], secondpart[len(secondpart)//2:] #split second half 
-                fuzzingDict[dbName + " payload:" + str(payloadCount)] = firstpart
-                payloadCount += 1
-                fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpart
-                payloadCount += 1
-    
+        firstparthold = firstpartfirst
+        secondparthold = secondpartfirst
+        payloadCount = 3
+
+        #loop generates entire dictionary of fuzzed input
+        while(len(firstparthold) > 1 and len(secondparthold) > 1):
+            
+            #we create a variable to remain stateful 
+            firstparthold = firstpartfirst
+            
+            #the first half of the payload is saved to the dictionary and then we increment the payload count
+            firstpartfirst = firstpartfirst[:len(firstpartfirst)//2] 
+            fuzzingDict[dbName + " payload:" + str(payloadCount)] = firstpartfirst
+            payloadCount += 1
+
+            #the first half of the second half of the payload is saved to the dictionary and then we increment the payload count
+            secondparthold = secondpartfirst
+            secondpartfirst = secondpartfirst[:len(secondpartfirst)//2] #split second half 
+            fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpartfirst
+            payloadCount += 1
+
+            #similarily in the same logic applies to the 2nd parts of both but without the statefulness
+            
+            firstpartsecond = firstparthold[len(firstparthold)//2:]
+            fuzzingDict[dbName + " payload:" + str(payloadCount)] = firstpartsecond
+            payloadCount += 1
+
+            secondpartsecond = secondparthold[len(secondparthold)//2:] 
+            fuzzingDict[dbName + " payload:" + str(payloadCount)] = secondpartsecond
+            payloadCount += 1
+            
+    # removes dictionary brackets so the input will be processed correctly
     for key,value in fuzzingDict.items():
         hold = ""
         for item in value:
